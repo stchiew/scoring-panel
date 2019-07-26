@@ -1,0 +1,28 @@
+{
+  "@pnp/generator-spfx": {
+    "framework": "react",
+    "pnpFramework": "reactjs.plus",
+    "pnp-libraries": [
+      "@pnp/pnpjs",
+      "@pnp/spfx-property-controls",
+      "@pnp/spfx-controls-react",
+      "ouifr@6",
+      "rush@2.9"
+    ],
+    "pnp-ci": [],
+    "pnp-vetting": [],
+    "spfxenv": "spo",
+    "pnp-testing": []
+  },
+  "@microsoft/generator-sharepoint": {
+    "environment": "spo",
+    "framework": "react",
+    "isCreatingSolution": true,
+    "version": "1.8.2",
+    "libraryName": "scoring-panel",
+    "libraryId": "aadc88c4-f3d6-4731-8ac4-4f1ad9b28cb9",
+    "packageManager": "npm",
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

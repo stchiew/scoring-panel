@@ -1,0 +1,13 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "scoring-panel-client-side-solution",
+    "id": "aadc88c4-f3d6-4731-8ac4-4f1ad9b28cb9",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "isDomainIsolated": false
+  },
+  "paths": {
+    "zippedPackage": "solution/scoring-panel.sppkg"
+  }
+}
