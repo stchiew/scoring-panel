@@ -10,18 +10,28 @@ import {
 import * as strings from 'ScoringPanelWebPartStrings';
 import ScoringPanel from './components/ScoringPanel';
 import { IScoringPanelProps } from './components/IScoringPanelProps';
+import { sp, Web } from '@pnp/sp';
 
 export interface IScoringPanelWebPartProps {
   description: string;
+  web: Web;
 }
 
 export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringPanelWebPartProps> {
+  public async onInit(): Promise<void> {
+    const _ = await super.onInit();
+    // other init code may be present
+    sp.setup({
+      spfxContext: this.context
+    });
+  }
 
   public render(): void {
-    const element: React.ReactElement<IScoringPanelProps > = React.createElement(
+    const element: React.ReactElement<IScoringPanelProps> = React.createElement(
       ScoringPanel,
       {
-        description: this.properties.description
+        description: this.properties.description,
+        web: this.context.pageContext.web
       }
     );
 
