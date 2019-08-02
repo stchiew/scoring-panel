@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import { Version } from '@microsoft/sp-core-library';
+import { Version, Environment } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import {
   IPropertyPaneConfiguration,
@@ -18,9 +18,11 @@ export interface IScoringPanelWebPartProps {
 }
 
 export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringPanelWebPartProps> {
+
   public async onInit(): Promise<void> {
     const _ = await super.onInit();
     // other init code may be present
+
     sp.setup({
       spfxContext: this.context
     });

@@ -1,5 +1,5 @@
-import { IRating } from '../models/IRating';
 export interface IScoringPanelState {
-  rating: IRating;
+  rating: number;
+  comments: string;
   status: string;
 }

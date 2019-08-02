@@ -1,4 +1,4 @@
 export interface IRating {
-  ScoringRatings: number;
-  ScoringComments: string;
+  Rating: number;
+  Comments: string;
 }
