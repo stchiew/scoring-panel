@@ -14,7 +14,8 @@ import { sp, Web } from '@pnp/sp';
 
 export interface IScoringPanelWebPartProps {
   description: string;
-  web: Web;
+  //web: Web;
+  //listname: string;
 }
 
 export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringPanelWebPartProps> {
@@ -33,7 +34,8 @@ export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringP
       ScoringPanel,
       {
         description: this.properties.description,
-        web: this.context.pageContext.web
+        web: this.context.pageContext.web,
+        listname: 'Scoring'
       }
     );
 

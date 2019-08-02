@@ -11,6 +11,7 @@ An spfx webpart for entering a rating and comments.
 ### Release implementations:
 1.0.0 - Initial working release
 - with update status message
+- try catch on CRUD functions
 
 
 ### Release roadmap
@@ -20,9 +21,9 @@ An spfx webpart for entering a rating and comments.
 
 ### Build options
 
-gulp clean - 
-gulp test - 
-gulp serve - 
-gulp bundle - 
-gulp package-solution - 
-gulp dist - build, bundle and package for prod
+- gulp clean - 
+- gulp test - 
+- gulp serve - 
+- gulp bundle - 
+- gulp package-solution - 
+- gulp dist - build, bundle and package for prod

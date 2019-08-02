@@ -2,8 +2,10 @@ import * as React from 'react';
 import styles from './ScoringPanel.module.scss';
 import { IScoringPanelProps } from './IScoringPanelProps';
 import { IScoringPanelState } from './IScoringPanelState';
+import { Rating, RatingSize } from 'office-ui-fabric-react/lib/Rating';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button';
+import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { Web } from '@pnp/sp';
 import { IRating } from '../models/IRating';
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
@@ -15,7 +17,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
 
   public constructor(props: Readonly<IScoringPanelProps>) {
     super(props);
-    this.state = { rating: 0, comments: '', status: "Empty" };
+    this.state = { rating: 0, comments: '', notifications: [], status: "Empty" };
 
     this._getItem.bind(this);
 
@@ -45,13 +47,18 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
       return (
         <div className={styles.scoringPanel}>
           <div className={styles.container}>
-            <div>This area for update status message</div>
+            {this.renderNotifications()}
             <span>Status : {this.state.status}</span>
             <div className={styles.row}>
-              <TextField
-                label="Ratings"
-                value={this.state.rating.toString()}
-                onChange={this._onRatingChange.bind(this)} />
+              <Rating
+                min={1}
+                max={5}
+                size={RatingSize.Large}
+                rating={this.state.rating}
+                onChange={this._onLargeStarChange}
+                ariaLabelFormat={'{0} of {1} stars selected'}
+              />
+              <span>Current Rating : {this.state.rating}</span>
             </div>
             <div className={styles.row}>
               <TextField label="Comments"
@@ -74,9 +81,24 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
       );
     }
   }
+
+  private renderNotifications() {
+    if (this.state.notifications.length === 0) {
+      return null;
+    }
+    setTimeout(() => { this.setState({ ...this.state, notifications: [] }); }, 4000);
+    return <div>
+      {
+        this.state.notifications.map((item, idx) =>
+          <MessageBar messageBarType={MessageBarType.success}>{item}</MessageBar>
+        )
+      }
+    </div>;
+  }
+
   public componentDidMount() {
     if (this.state.status != "Loaded") {
-      this._getItem("Scoring");
+      this._getItem(this.props.listname);
     }
   }
 
@@ -92,7 +114,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
           .items
           .getById(this._currentId)
           .select('Rating', 'Comments').get();
-        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, status: 'Loaded' });
+        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, notifications: ['Item Loaded Successfully'], status: 'Loaded' });
       }
       catch (error) {
         this.setState({ status: "Error" });
@@ -103,6 +125,10 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
     }
   }
 
+  private _onLargeStarChange = (ev: React.FocusEvent<HTMLElement>, newrating: number): void => {
+    this.setState({ rating: newrating });
+  }
+
   private _onCommentsChange = (ev: React.FormEvent<HTMLInputElement>, newValue?: string) => {
     this.setState({ comments: newValue });
   }
@@ -111,16 +137,15 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
     this.setState({ rating: parseInt(newValue) });
   }
 
-  private async _updateItem(): Promise<any> {
+  private async _updateItem(): Promise<void> {
     const web: Web = new Web(this.props.web.absoluteUrl);
     let response = await web.lists
-      .getByTitle('Scoring')
+      .getByTitle(this.props.listname)
       .items
       .getById(this._currentId)
       .update({ Rating: this.state.rating, Comments: this.state.comments });
-    this.setState({ status: "Updated" });
-    return response;
+    this.setState({ ...this.state, notifications: ['Your ratings saved successfully!'], status: "Updated" });
+    //return response;
 
   }
-
 }
