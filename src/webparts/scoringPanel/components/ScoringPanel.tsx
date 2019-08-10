@@ -6,9 +6,12 @@ import { Rating, RatingSize } from 'office-ui-fabric-react/lib/Rating';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { PrimaryButton } from 'office-ui-fabric-react/lib/Button';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
+import { Spinner, SpinnerSize } from 'office-ui-fabric-react/lib/Spinner';
+import "@pnp/polyfill-ie11";
 import { Web } from '@pnp/sp';
 import { IRating } from '../models/IRating';
 import { UrlQueryParameterCollection } from '@microsoft/sp-core-library';
+import * as strings from 'ListFormStrings';
 
 export default class ScoringPanel extends React.Component<IScoringPanelProps, IScoringPanelState> {
 
@@ -17,7 +20,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
 
   public constructor(props: Readonly<IScoringPanelProps>) {
     super(props);
-    this.state = { rating: 0, comments: '', notifications: [], status: "Empty" };
+    this.state = { rating: 0, comments: '', notifications: [], status: "Empty", loading: false };
 
     this._getItem.bind(this);
 
@@ -37,7 +40,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
         <div className={styles.scoringPanel}>
           <div className={styles.container}>
             <div className={styles.row}>
-              <span>Error occurred:</span>
+              <span>Error occurred: {this.state.notifications}</span>
             </div>
           </div>
         </div>
@@ -47,12 +50,11 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
       return (
         <div className={styles.scoringPanel}>
           <div className={styles.container}>
-            {this.renderNotifications()}
-            <span>Status : {this.state.status}</span>
+            <div><span className={styles.text_labels}>Stars rating: 1 - Average, 2 - Good, 3 - Very Good, 4 - Excellent</span></div>
             <div className={styles.row}>
               <Rating
                 min={1}
-                max={5}
+                max={4}
                 size={RatingSize.Large}
                 rating={this.state.rating}
                 onChange={this._onLargeStarChange}
@@ -71,11 +73,17 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
             <div className={styles.row}><PrimaryButton
               data-automation-id="test"
               disabled={false}
-              text="Save This"
+              text={strings.SaveButtonText}
               iconProps={{ iconName: 'Save' }}
               allowDisabledFocus={true}
               onClick={this._updateItem.bind(this)}
             /></div>
+            <div className={styles.row_message}>
+              {
+                this.state.loading && <Spinner label={'Saving...'} size={SpinnerSize.medium} />
+              }
+              {this.renderNotifications()}
+            </div>
           </div>
         </div >
       );
@@ -96,6 +104,14 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
     </div>;
   }
 
+  private renderCurrentRating() {
+
+    const scale: string[] = ["Average", "Good", "Very Good", "Excellent"];
+    let scaleText = scale[this.state.rating];
+    return this.state.rating == 0 || this.state.rating == null ?
+      <div><span>Current Rating : {this.state.rating}</span></div> : null;
+  }
+
   public componentDidMount() {
     if (this.state.status != "Loaded") {
       this._getItem(this.props.listname);
@@ -114,10 +130,10 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
           .items
           .getById(this._currentId)
           .select('Rating', 'Comments').get();
-        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, notifications: ['Item Loaded Successfully'], status: 'Loaded' });
+        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, notifications: [strings.ItemLoadedSuccessfully], status: 'Success' });
       }
       catch (error) {
-        this.setState({ status: "Error" });
+        this.setState({ notifications: [strings.ErrorLoadingData + error.message], status: "Error" });
         console.log("From console:" + error.message);
       }
     } else {
@@ -139,13 +155,17 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
 
   private async _updateItem(): Promise<void> {
     const web: Web = new Web(this.props.web.absoluteUrl);
-    let response = await web.lists
-      .getByTitle(this.props.listname)
-      .items
-      .getById(this._currentId)
-      .update({ Rating: this.state.rating, Comments: this.state.comments });
-    this.setState({ ...this.state, notifications: ['Your ratings saved successfully!'], status: "Updated" });
-    //return response;
-
+    this.setState({ loading: true });
+    try {
+      let response = await web.lists
+        .getByTitle(this.props.listname)
+        .items
+        .getById(this._currentId)
+        .update({ Rating: this.state.rating, Comments: this.state.comments });
+      this.setState({ ...this.state, notifications: [strings.ItemSavedSuccessfully], status: "Success", loading: false });
+    }
+    catch (error) {
+      this.setState({ notifications: [strings.FieldsErrorOnSaving], status: 'Error' });
+    }
   }
 }

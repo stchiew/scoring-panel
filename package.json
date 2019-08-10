@@ -1,6 +1,6 @@
 {
   "name": "scoring-panel",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
   "engines": {
     "node": ">=0.10.0"
@@ -19,6 +19,7 @@
     "@microsoft/sp-property-pane": "1.8.2",
     "@microsoft/sp-webpart-base": "1.8.2",
     "@pnp/pnpjs": "^1.3.3",
+    "@pnp/polyfill-ie11": "^1.0.2",
     "@pnp/spfx-controls-react": "1.13.2",
     "@pnp/spfx-property-controls": "1.15.0",
     "@types/es6-promise": "0.0.33",

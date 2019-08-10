@@ -13,7 +13,7 @@ import { IScoringPanelProps } from './components/IScoringPanelProps';
 import { sp, Web } from '@pnp/sp';
 
 export interface IScoringPanelWebPartProps {
-  description: string;
+  listname: string;
   //web: Web;
   //listname: string;
 }
@@ -33,9 +33,8 @@ export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringP
     const element: React.ReactElement<IScoringPanelProps> = React.createElement(
       ScoringPanel,
       {
-        description: this.properties.description,
+        listname: this.properties.listname,
         web: this.context.pageContext.web,
-        listname: 'Scoring'
       }
     );
 
@@ -61,8 +60,8 @@ export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringP
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
-                  label: strings.DescriptionFieldLabel
+                PropertyPaneTextField('listname', {
+                  label: strings.ListnameFieldLabel
                 })
               ]
             }

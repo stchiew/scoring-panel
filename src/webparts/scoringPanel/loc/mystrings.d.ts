@@ -1,7 +1,7 @@
 declare interface IScoringPanelWebPartStrings {
   PropertyPaneDescription: string;
   BasicGroupName: string;
-  DescriptionFieldLabel: string;
+  ListnameFieldLabel: string;
 }
 
 declare module 'ScoringPanelWebPartStrings' {

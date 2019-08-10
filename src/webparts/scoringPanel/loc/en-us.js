@@ -1,7 +1,7 @@
-define([], function() {
+define([], function () {
   return {
-    "PropertyPaneDescription": "Description",
-    "BasicGroupName": "Group Name",
-    "DescriptionFieldLabel": "Description Field"
+    "PropertyPaneDescription": "PFIA Scoring Panel",
+    "BasicGroupName": "Settings",
+    "ListnameFieldLabel": "List name of scoring table"
   }
 });

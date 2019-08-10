@@ -27,7 +27,7 @@
     },
     "officeFabricIconFontName": "CompanyDirectory",
     "properties": {
-      "description": "Scoring Panel"
+      "listname": "Scoring"
     }
   }]
 }

@@ -3,4 +3,5 @@ export interface IScoringPanelState {
   comments: string;
   notifications: string[];
   status: string;
+  loading: boolean;
 }
