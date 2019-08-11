@@ -30,10 +30,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
     if (this.state.status == 'NoParam') {
       return (
         <div className={styles.scoringPanel}>
-          <div className={styles.container}>
-            <span>No Parameter provided</span>
-          </div>
-        </div >
+        </div>
       );
     } else if (this.state.status == 'Error') {
       return (
