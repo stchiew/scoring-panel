@@ -4,7 +4,8 @@ import { Version, Environment } from '@microsoft/sp-core-library';
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import {
   IPropertyPaneConfiguration,
-  PropertyPaneTextField
+  PropertyPaneTextField,
+  PropertyPaneLabel
 } from '@microsoft/sp-property-pane';
 
 import * as strings from 'ScoringPanelWebPartStrings';
@@ -63,6 +64,14 @@ export default class ScoringPanelWebPart extends BaseClientSideWebPart<IScoringP
                 PropertyPaneTextField('listname', {
                   label: strings.ListnameFieldLabel
                 })
+              ]
+            },
+            {
+              groupName: "Version",
+              groupFields: [PropertyPaneLabel('version', {
+                text: this.manifest.version.toString()
+              })
+
               ]
             }
           ]
