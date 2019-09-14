@@ -15,12 +15,12 @@ import * as strings from 'ListFormStrings';
 
 export default class ScoringPanel extends React.Component<IScoringPanelProps, IScoringPanelState> {
 
-  private _rate: IRating = { Rating: 0, Comments: '' };
+  private _rate: IRating = { Rating: 0, Comments: '', Feedback: '' };
   private _currentId: number = 0;
 
   public constructor(props: Readonly<IScoringPanelProps>) {
     super(props);
-    this.state = { rating: 0, comments: '', notifications: [], status: "Empty", loading: false };
+    this.state = { rating: 0, comments: '', feedback: '', notifications: [], status: "Empty", loading: false };
 
     this._getItem.bind(this);
 
@@ -50,7 +50,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
             <div><span className={styles.text_labels}>Stars rating: 1 - Average, 2 - Good, 3 - Very Good, 4 - Excellent</span></div>
             <div className={styles.row}>
               <Rating
-                min={1}
+                allowZeroStars={true}
                 max={4}
                 size={RatingSize.Large}
                 rating={this.state.rating}
@@ -59,12 +59,21 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
               />
               <span>Current Rating : {this.state.rating}</span>
             </div>
+
             <div className={styles.row}>
               <TextField label="Comments"
                 multiline rows={9}
                 autoAdjustHeight={true}
                 value={this.state.comments}
                 onChange={this._onCommentsChange.bind(this)}
+              />
+            </div>
+            <div className={styles.row}>
+              <TextField label="Feedback to Submitter"
+                multiline rows={9}
+                autoAdjustHeight={true}
+                value={this.state.feedback}
+                onChange={this._onFeedbackChange.bind(this)}
               />
             </div>
             <div className={styles.row}><PrimaryButton
@@ -82,7 +91,8 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
               {this.renderNotifications()}
             </div>
           </div>
-        </div >
+        </div>
+
       );
     }
   }
@@ -126,8 +136,8 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
           .getByTitle(listname)
           .items
           .getById(this._currentId)
-          .select('Rating', 'Comments').get();
-        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, notifications: [strings.ItemLoadedSuccessfully], status: 'Success' });
+          .select('Rating', 'Comments', 'Feedback').get();
+        this.setState({ rating: _scorerating.Rating, comments: _scorerating.Comments, feedback: _scorerating.Feedback, notifications: [strings.ItemLoadedSuccessfully], status: 'Success' });
       }
       catch (error) {
         this.setState({ notifications: [strings.ErrorLoadingData + error.message], status: "Error" });
@@ -146,6 +156,10 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
     this.setState({ comments: newValue });
   }
 
+  private _onFeedbackChange = (ev: React.FormEvent<HTMLInputElement>, newString?: string) => {
+    this.setState({ feedback: newString });
+  }
+
   private _onRatingChange = (ev: React.FormEvent<HTMLInputElement>, newValue?: string) => {
     this.setState({ rating: parseInt(newValue) });
   }
@@ -158,7 +172,7 @@ export default class ScoringPanel extends React.Component<IScoringPanelProps, IS
         .getByTitle(this.props.listname)
         .items
         .getById(this._currentId)
-        .update({ Rating: this.state.rating, Comments: this.state.comments });
+        .update({ Rating: this.state.rating, Comments: this.state.comments, Feedback: this.state.feedback });
       this.setState({ ...this.state, notifications: [strings.ItemSavedSuccessfully], status: "Success", loading: false });
     }
     catch (error) {

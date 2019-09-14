@@ -3,7 +3,7 @@
   "solution": {
     "name": "Scoring panel solution",
     "id": "aadc88c4-f3d6-4731-8ac4-4f1ad9b28cb9",
-    "version": "1.0.1.0",
+    "version": "1.0.2.0",
     "includeClientSideAssets": true,
     "isDomainIsolated": false
   },
